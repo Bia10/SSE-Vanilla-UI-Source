@@ -1,13 +1,13 @@
-class Shared.GlobalFunc
+﻿class Shared.GlobalFunc
 {
-   static var RegisteredTextFields = new Object();
-   static var RegisteredMovieClips = new Object();
+   static var RegisteredTextFields: Object = new Object();
+   static var RegisteredMovieClips: Object = new Object();
    function GlobalFunc()
    {
    }
-   static function Lerp(aTargetMin, aTargetMax, aSourceMin, aSourceMax, aSource, abClamp)
+   static function Lerp(aTargetMin: Number, aTargetMax: Number, aSourceMin: Number, aSourceMax: Number, aSource: Number, abClamp: Boolean): Number
    {
-      var _loc1_ = aTargetMin + (aSource - aSourceMin) / (aSourceMax - aSourceMin) * (aTargetMax - aTargetMin);
+      var _loc1_: Number = aTargetMin + (aSource - aSourceMin) / (aSourceMax - aSourceMin) * (aTargetMax - aTargetMin);
       if(abClamp)
       {
          _loc1_ = Math.min(Math.max(_loc1_,aTargetMin),aTargetMax);

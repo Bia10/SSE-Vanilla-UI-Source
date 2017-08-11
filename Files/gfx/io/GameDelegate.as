@@ -1,73 +1,63 @@
-﻿//****************************************************************************
-//  Best guess from GFX documentation.
-//  https: //developer.scaleform.com/doc/gfx/3.0/clik/gfx_io_GameDelegate.html
-//****************************************************************************
-
-import flash.external.ExternalInterface;
-
 class gfx.io.GameDelegate
 {
-
-	static var responseHash:Object = {};
-	static var callBackHash:Object = {};
-	static var nextID:Number = 0;
-	static var initialized:Boolean = false;
-
-	function GameDelegate()
-	{
-	}
-
-	static function call(methodName:String, params:Array, scope:Object, callBack:String):Void
-	{
-		if (!initialized)
-		{
-			initialize();
-		}
-		nextID = ++nextID;
-		var thisID:Number = nextID;
-		responseHash[thisID] = [scope, callBack];
-		params.unshift(methodName,thisID);
-		flash.external.ExternalInterface.call.apply(null,params);
-		delete responseHash[thisID];
-	}
-
-	static function receiveResponse(uid:Number):Void
-	{
-		var thisResponse = responseHash[uid];
-		if (thisResponse == null)
-		{
-			return;
-		}
-		var scope:Object = thisResponse[0];
-		var callBack:String = thisResponse[1];
-		scope[callBack].apply(scope,arguments.slice(1));
-	}
-
-	static function addCallBack(methodName:String, scope:Object, callBack:String):Void
-	{
-		if (!initialized)
-		{
-			initialize();
-		}
-		callBackHash[methodName] = [scope, callBack];
-	}
-
-	static function receiveCall(methodName:String):Void
-	{
-		var thisCallBackHash = callBackHash[methodName];
-		if (thisCallBackHash == null)
-		{
-			return;
-		}
-		var scope:Object = thisCallBackHash[0];
-		var callBack:String = thisCallBackHash[1];
-		scope[callBack].apply(scope,arguments.slice(1));
-	}
-
-	static function initialize():Void
-	{
-		initialized = true;
-		ExternalInterface.addCallback("call",GameDelegate,receiveCall);
-		ExternalInterface.addCallback("respond",GameDelegate,receiveResponse);
-	}
+   static var responseHash = {};
+   static var callBackHash = {};
+   static var nextID = 0;
+   static var initialized = false;
+   function GameDelegate()
+   {
+   }
+   static function call(methodName, params, scope, callBack)
+   {
+      if(!gfx.io.GameDelegate.initialized)
+      {
+         gfx.io.GameDelegate.initialize();
+      }
+      gfx.io.GameDelegate.nextID = gfx.io.GameDelegate.nextID + 1;
+      var _loc1_ = gfx.io.GameDelegate.nextID;
+      gfx.io.GameDelegate.responseHash[_loc1_] = [scope,callBack];
+      params.unshift(methodName,_loc1_);
+      flash.external.ExternalInterface.call.apply(null,params);
+      delete gfx.io.GameDelegate.responseHash.register1;
+   }
+   static function receiveResponse(uid)
+   {
+      var _loc2_ = gfx.io.GameDelegate.responseHash[uid];
+      if(_loc2_ == null)
+      {
+         return undefined;
+      }
+      var _loc3_ = _loc2_[0];
+      var _loc4_ = _loc2_[1];
+      _loc3_[_loc4_].apply(_loc3_,arguments.slice(1));
+   }
+   static function addCallBack(methodName, scope, callBack)
+   {
+      if(!gfx.io.GameDelegate.initialized)
+      {
+         gfx.io.GameDelegate.initialize();
+      }
+      gfx.io.GameDelegate.callBackHash[methodName] = [scope,callBack];
+   }
+   static function removeCallBack(methodName)
+   {
+      gfx.io.GameDelegate.callBackHash[methodName] = null;
+   }
+   static function receiveCall(methodName)
+   {
+      var _loc2_ = gfx.io.GameDelegate.callBackHash[methodName];
+      if(_loc2_ == null)
+      {
+         return undefined;
+      }
+      var _loc3_ = _loc2_[0];
+      var _loc4_ = _loc2_[1];
+      _loc3_[_loc4_].apply(_loc3_,arguments.slice(1));
+   }
+   static function initialize()
+   {
+      gfx.io.GameDelegate.initialized = true;
+      flash.external.ExternalInterface.addCallback("call",gfx.io.GameDelegate,gfx.io.GameDelegate.receiveCall);
+      flash.external.ExternalInterface.addCallback("respond",gfx.io.GameDelegate,gfx.io.GameDelegate.receiveResponse);
+   }
 }
